@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise Kue & Kembang Api!</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a2e;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .cake {
+            width: 200px;
+            height: 120px;
+            background: #f9c5d1;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cake:hover {
+            transform: scale(1.05);
+        }
+
+        .cake:active {
+            transform: scale(0.95);
+        }
+
+        .cake:before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffd700;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cake:hover:before {
+            opacity: 1;
+            animation: candle 1s infinite alternate;
+        }
+
+        .cake-top {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 40px;
+            background: #f9c5d1;
+            border-radius: 20px;
+        }
+
+        .cake-bottom {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 20px;
+            background: #f0a3b8;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .decoration {
+            position: absolute;
+            background: #ff6b6b;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        @keyframes candle {
+            0% { box-shadow: 0 0 10px #ffd700; }
+            100% { box-shadow: 0 0 30px #ffd700, 0 0 40px #ffd700; }
+        }
+
+        @keyframes firework {
+            0% {
+                transform: translate(-50%, 0) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -100vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .firework {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: firework 1s ease-out forwards;
+        }
+
+        .message {
+            color: white;
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .cake-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cake-container:hover .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Klik Kuenya!</h1>
+        <div class="cake-container">
+            <div class="cake">
+                <div class="cake-top"></div>
+                <div class="cake-bottom"></div>
+            </div>
+            <div class="message">Selamat! 🎉</div>
+        </div>
+    </div>
+
+    <script>
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#ff0088'];
+        
+        document.querySelector('.cake').addEventListener('click', (e) => {
+            // Create fireworks
+            for (let i = 0; i < 50; i++) {
+                createFirework(e.clientX, e.clientY);
+            }
+        });
+
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
+            firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+            firework.style.boxShadow = `0 0 10px 2px ${firework.style.background}`;
+            
+            // Random size
+            const size = Math.random() * 8 + 4;
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            
+            // Random animation duration
+            const duration = Math.random() * 1 + 1;
+            firework.style.animationDuration = `${duration}s`;
+            
+            // Random direction
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            firework.style.setProperty('--endX', `${Math.cos(angle) * distance}px`);
+            firework.style.setProperty('--endY', `${Math.sin(angle) * distance}px`);
+            
+            document.body.appendChild(firework);
+            
+            // Remove firework after animation
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
+
+        // Add some random decorations on the cake
+        for (let i = 0; i < 10; i++) {
+            const deco = document.createElement('div');
+            deco.className = 'decoration';
+            deco.style.width = `${Math.random() * 15 + 5}px`;
+            deco.style.height = deco.style.width;
+            deco.style.background = colors[Math.floor(Math.random() * colors.length)];
+            deco.style.left = `${Math.random() * 180 + 10}px`;
+            deco.style.top = `${Math.random() * 100 + 10}px`;
+            deco.style.opacity = '0.8';
+            document.querySelector('.cake').appendChild(deco);
+        }
+    </script>
+</body>
+</html>
